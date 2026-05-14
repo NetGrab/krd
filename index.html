@@ -9,7 +9,7 @@
         :root {
             --primary: #ff0050;
             --secondary: #00f2ea;
-            --bg-dark: #0f172a;
+            --bg-dark: #000000; /* گۆڕدرا بۆ ڕەشی تەواو */
             --glass: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
@@ -33,6 +33,9 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             pointer-events: none;
+            /* باکگراوەندەکە تەنها ڕەشە و کەمێک ڕەنگی گۆشەکانی بۆ زیاد کراوە بۆ جوانی */
+            background: radial-gradient(circle at 15% 25%, rgba(255, 0, 80, 0.05) 0%, transparent 40%),
+                        radial-gradient(circle at 85% 75%, rgba(0, 242, 234, 0.05) 0%, transparent 40%);
         }
 
         .container {
@@ -43,7 +46,6 @@
             z-index: 1;
         }
 
-        /* ستایلی نوێ بۆ لۆگۆکە کە کلیکی لێ دەکرێت */
         .logo-link {
             text-decoration: none;
             display: inline-block;
@@ -79,20 +81,20 @@
         }
 
         .glass-card {
-            background: var(--glass);
+            background: rgba(20, 20, 20, 0.6); /* تۆختر کراوە بۆ ئەوەی لەسەر ڕەش جوان بێت */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             padding: 25px;
             border-radius: 28px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
             margin-bottom: 20px;
         }
 
         .input-wrapper { position: relative; margin-bottom: 15px; }
 
         input {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border);
             padding: 16px; padding-left: 80px; border-radius: 15px;
             color: white; font-size: 1rem; outline: none; box-sizing: border-box; text-align: right;
         }
@@ -101,13 +103,13 @@
             position: absolute; left: 8px; top: 50%; transform: translateY(-50%);
             background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);
             color: var(--secondary); padding: 6px 12px; border-radius: 10px; cursor: pointer;
-            font-size: 0.8rem; display: flex; align-items: center; gap: 5px;
+            font-size: 0.8rem;
         }
 
         #fetchBtn {
             width: 100%; background: linear-gradient(45deg, var(--primary), #ff4d8d);
             color: white; border: none; padding: 16px; border-radius: 15px;
-            font-weight: bold; font-size: 1.1rem; cursor: pointer; transition: 0.3s;
+            font-weight: bold; font-size: 1.1rem; cursor: pointer;
         }
 
         #result { margin-top: 20px; }
@@ -119,8 +121,6 @@
             margin-top: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
         }
 
-        .download-btn:disabled { background: #475569; }
-
         footer { padding: 20px 0; opacity: 0.5; font-size: 0.8rem; }
         .hidden { display: none; }
     </style>
@@ -131,7 +131,6 @@
 
     <div class="container">
         <header>
-            <!-- لۆگۆکە لێرە کراوە بە لینک بۆ ڕیفرێش بوونەوە -->
             <a href="javascript:location.reload();" class="logo-link">
                 <div class="logo-area">
                     <div class="kurdish-flag"><div class="sun"></div></div>
@@ -162,7 +161,7 @@
                 <p id="videoTitle" style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; margin-bottom: 10px;"></p>
                 
                 <button onclick="downloadVideo()" id="dlBtn" class="download-btn">
-                    <i class="fas fa-download"></i> پاشکەوتکردن لە گەلەری
+                    <i class="fas fa-download"></i> پاشکەوتکردن (Gallery)
                 </button>
             </div>
         </main>
@@ -185,9 +184,9 @@
             reset() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.1;
-                this.speedX = Math.random() * 0.6 - 0.3;
-                this.speedY = Math.random() * 0.6 - 0.3;
+                this.size = Math.random() * 1.8 + 0.1;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * 0.5 - 0.25;
                 this.opacity = Math.random();
             }
             update() {
@@ -199,7 +198,7 @@
                 ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
-        for (let i = 0; i < 70; i++) particles.push(new Particle());
+        for (let i = 0; i < 80; i++) particles.push(new Particle());
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             particles.forEach(p => { p.update(); p.draw(); });
@@ -207,7 +206,7 @@
         }
         animate();
 
-        /* Main Logic */
+        /* Logic */
         let finalVideoUrl = "";
 
         async function pasteLink() {
@@ -231,8 +230,8 @@
                     document.getElementById('videoThumb').src = json.data.cover;
                     document.getElementById('videoTitle').innerText = json.data.title || "ڤیدیۆکە ئامادەیە";
                     document.getElementById('result').classList.remove('hidden');
-                } else { alert("لینکەکە هەڵەیە یان ڤیدیۆکە سڕاوەتەوە"); }
-            } catch (e) { alert("کێشەیەک لە سێرڤەر هەیە"); }
+                } else { alert("لینکەکە هەڵەیە"); }
+            } catch (e) { alert("کێشەیەک ڕوویدا"); }
             finally { document.getElementById('loader').classList.add('hidden'); }
         }
 
@@ -241,25 +240,21 @@
             const originalContent = dlBtn.innerHTML;
             try {
                 dlBtn.disabled = true;
-                dlBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> خەریکی دابەزاندنە...';
-
+                dlBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> چاوەڕێبە...';
                 const response = await fetch(finalVideoUrl);
                 const blob = await response.blob();
                 const blobUrl = window.URL.createObjectURL(blob);
-                
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = blobUrl;
                 a.download = `KurdishSaver_${Date.now()}.mp4`;
                 document.body.appendChild(a);
                 a.click();
-                
                 setTimeout(() => {
                     window.URL.revokeObjectURL(blobUrl);
                     document.body.removeChild(a);
                 }, 100);
             } catch (error) {
-                // ئەگەر بلۆب ڕێگری لێکرا، لینکەکە ڕاستەوخۆ دەکاتەوە
                 window.location.href = finalVideoUrl;
             } finally {
                 dlBtn.disabled = false;
