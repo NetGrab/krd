@@ -33,7 +33,6 @@
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
             pointer-events: none;
-            /* باکگراوەندەکە تەنها ڕەشە و کەمێک ڕەنگی گۆشەکانی بۆ زیاد کراوە بۆ جوانی */
             background: radial-gradient(circle at 15% 25%, rgba(255, 0, 80, 0.05) 0%, transparent 40%),
                         radial-gradient(circle at 85% 75%, rgba(0, 242, 234, 0.05) 0%, transparent 40%);
         }
@@ -81,7 +80,7 @@
         }
 
         .glass-card {
-            background: rgba(20, 20, 20, 0.6); /* تۆختر کراوە بۆ ئەوەی لەسەر ڕەش جوان بێت */
+            background: rgba(20, 20, 20, 0.6);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
@@ -226,7 +225,8 @@
                 const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
                 const json = await res.json();
                 if (json.code === 0) {
-                    finalVideoUrl = json.data.play;
+                    // لێرەدا کوالێتی HD جێگیر کراوە
+                    finalVideoUrl = json.data.hdplay || json.data.play;
                     document.getElementById('videoThumb').src = json.data.cover;
                     document.getElementById('videoTitle').innerText = json.data.title || "ڤیدیۆکە ئامادەیە";
                     document.getElementById('result').classList.remove('hidden');
